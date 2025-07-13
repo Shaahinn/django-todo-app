@@ -1,7 +1,9 @@
+ {% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>To-Do List</title>
+<link rel="stylesheet" href="{% static 'todo/style.css' %}">
 </head>
 <body>
     <h1>My To-Do List</h1>
@@ -15,7 +17,23 @@
     <ul>
         {% for task in tasks %}
             <li>
-                {{ task.title }} {% if task.completed %}(Done){% endif %}
+                {% if task.completed %}
+                    <s>{{ task.title }}</s>
+                {% else %}
+                    {{ task.title }}
+                {% endif %}
+
+                <!-- Complete Button -->
+                <form action="{% url 'complete_task' task.id %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Complete</button>
+                </form>
+
+                <!-- Delete Button -->
+                <form action="{% url 'delete_task' task.id %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
             </li>
         {% empty %}
             <li>No tasks yet.</li>
